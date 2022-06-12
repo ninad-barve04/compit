@@ -25,10 +25,10 @@ void encode_byte( int byte, FILE *op_fp, ProbabilityDistribution *pdistib){
     for(;;){
         debug_print("Lower: %lf\tUpper: %lf\nByte: %hx, Byte Range: %d\n", pd.lower, pd.upper, byte, pd.range[byte]);
         if( pd.upper < HALF){
-            writeBit(0, op_fp);
+            write_bit(0, op_fp);
         }
         else if( pd.lower >= HALF){
-            writeBit(1, op_fp);
+            write_bit(1, op_fp);
             pd.upper = pd.upper - HALF;
             pd.lower = pd.lower - HALF;
             
@@ -141,7 +141,7 @@ void encode_file(FILE *ip_fp, FILE *op_fp) {
      return;
 }
 
-void bufferAndWriteOut( int onebit, FILE *fp)
+void buffer_and_write_out( int onebit, FILE *fp)
 {
     debug_print("%d\t%d\t", onebit, buffer);
     buffer >>= 1;
@@ -160,12 +160,12 @@ void bufferAndWriteOut( int onebit, FILE *fp)
 	}
    
 }
-void writeBit(int number, FILE *fp){
+void write_bit(int number, FILE *fp){
 
-    bufferAndWriteOut(number, fp);
+    buffer_and_write_out(number, fp);
     while (bitsToWrite > 0)
 	{
-		bufferAndWriteOut(!number,fp);
+		buffer_and_write_out(!number,fp);
 		bitsToWrite--;
 	}
  

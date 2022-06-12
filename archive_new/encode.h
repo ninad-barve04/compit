@@ -16,7 +16,7 @@ typedef struct ProbabilityDistribution {
 
 void encode_file(FILE *ip_fp, FILE *op_fp);
 void encode_bitstream(unsigned char buffer[ENCODING_BUFFER], ProbabilityDistribution *pd_lookup);
-void writeBit(int bit, FILE *fp);
+void write_bit(int bit, FILE *fp);
 #endif // BIN_FILE_READ_H
 
 
