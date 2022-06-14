@@ -47,12 +47,11 @@ void encode_byte( int byte, FILE *op_fp, ProbabilityDistribution *pdistib){
 
     ProbabilityDistribution pd = (*pdistib);
     int test = 0;
-   
+
     int current_range = pd.upper - pd.lower;
     pd.upper = pd.lower + ((current_range * pd.range[byte - 1]) / pd.range[0]);
-  
     pd.lower = pd.lower + ((current_range * pd.range[byte]) / pd.range[0]);
- 
+
 
     for(;;){
         debug_print("Lower: %lf\tUpper: %lf\nByte: %hx, Byte Range: %d\n", pd.lower, pd.upper, byte, pd.range[byte]);
@@ -86,7 +85,13 @@ void encode_byte( int byte, FILE *op_fp, ProbabilityDistribution *pdistib){
     return;
 }
 
-
+/**
+ * @brief File is encoded using an integer following adaptive arithmetic coding
+ *        technique
+ * 
+ * @param ip_fp 
+ * @param op_fp 
+ */
 void encode_file(FILE *ip_fp, FILE *op_fp) {
     int bit_list[BUFFER_SIZE];
     int encUnit;
@@ -95,7 +100,7 @@ void encode_file(FILE *ip_fp, FILE *op_fp) {
    
 
 
-    /* 
+    /*
      * Probability distribution is an array of length 256, which stores the 
      * count each byte occurs. This also is the lower bound for the probability 
      * distribution of all the bytes. 
@@ -104,6 +109,36 @@ void encode_file(FILE *ip_fp, FILE *op_fp) {
     memset(pd.range, 0, sizeof(pd.range)); // Set array elements to 0
     memset(bit_list, 0, sizeof(bit_list));
 
+    /*
+    
+    //   Following while loop counts the number of times each byte appears in the  
+    //   bytestream.
+     
+    while ((encUnit = fgetc(ip_fp)) != EOF) {
+        bit_list[encUnit]++;
+        total_count++;
+    }
+    pd.cumulative_prob = total_count;
+    
+    
+    // Now populate probability distribution array
+     
+    int total = 0;
+
+    for (int i = 0; i < sizeof(bit_list); i++) {
+        pd.range[i] = pd.range[i-1] + bit_list[i];
+        total = total + bit_list[i];
+    }
+
+     // The array forms a lookup header at the top of the file
+     
+    for (int i = 0; i < sizeof(bit_list); i++) {
+        fwrite(&i, sizeof(unsigned char), 1, op_fp);
+        fwrite(&(pd.range[i]), sizeof(unsigned short), 1, op_fp);
+    }
+
+    rewind(ip_fp);
+    */
     
     /*
      * Following while loop counts the number of times each byte appears in the  
@@ -118,7 +153,9 @@ void encode_file(FILE *ip_fp, FILE *op_fp) {
     pd.cumulative_prob = total_count;
     pd.total_count = total_count;
     
-    // initialize probabilty and the cumulative frequency table
+    /*
+     * initialize probabilty and the cumulative frequency table
+     */
     initialize_indexes(&pd);
 
     
@@ -129,7 +166,6 @@ void encode_file(FILE *ip_fp, FILE *op_fp) {
     pd.lower = 0;
     pd.upper = MAX_RANGE_VALUE;
 
-    float current_range = 0;
 
     /*
      * read each encoding unit ( char) from file and encode it

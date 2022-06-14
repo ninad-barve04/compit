@@ -9,8 +9,8 @@
  * 
  */
 
+
 #include <stdio.h>
-#include <unistd.h>
 #include <string.h>
 
 #include "constants.h"
@@ -21,8 +21,6 @@
 
 int main(int argc, char *const argv[])
 {
-    int option;
-    int encode = 1;
     char ip_filename[1024];
     char op_filename[1024];
     
