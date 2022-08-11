@@ -1,0 +1,8 @@
+Arithmetic encoder
+
+Arithmetic encoding is based on the probability of each symbol appearing in the 
+source. 
+Each symbol has a particulr frequency of appearing in the bytestream. Based on this
+frequency, we can calculate the range corresponding to a single byte or multiple
+bytes. This probability range can be decoded to give back original stream.
+

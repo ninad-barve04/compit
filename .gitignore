@@ -3,3 +3,4 @@ CompIt
 *.o
 *.ninad
 .vscode/
+*.tar.gz
